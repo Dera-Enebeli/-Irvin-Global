@@ -11,7 +11,7 @@ const config: Config = {
       colors: {
         midnight: '#0B121E',
         charcoal: '#1A222F',
-        electric: '#00AEEF',
+        electric: '#0055FF',
         ice: '#FFFFFF',
         deepNavy: '#1E293B',
       },

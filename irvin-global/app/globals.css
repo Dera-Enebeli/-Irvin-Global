@@ -5,7 +5,7 @@
 :root {
   --midnight: #0B121E;
   --charcoal: #1A222F;
-  --electric: #00AEEF;
+  --electric: #0055FF;
   --ice: #FFFFFF;
   --deepNavy: #1E293B;
 }
@@ -26,11 +26,11 @@ body {
 }
 
 .logo-glow {
-  filter: drop-shadow(0 0 20px rgba(0, 174, 239, 0.2));
+  filter: drop-shadow(0 0 20px rgba(0, 85, 255, 0.2));
 }
 
 .btn-gradient {
-  background: linear-gradient(90deg, #00AEEF, #00D4FF);
+  background: linear-gradient(90deg, #0055FF, #3377FF);
 }
 
 .card-glass {

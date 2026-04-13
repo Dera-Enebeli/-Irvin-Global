@@ -24,6 +24,7 @@ export default function Home() {
       <NewsMedia />
       <Footer />
       <StickyButton onClick={() => setIsModalOpen(true)} />
+      
       <InquiryModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </main>
   )

@@ -60,7 +60,7 @@ export default function InquiryModal({ isOpen, onClose }: InquiryModalProps) {
       className="fixed inset-0 z-[100] flex items-center justify-center p-4"
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
-      <div className="absolute inset-0 bg-navy/80 backdrop-blur-sm" onClick={onClose} />
+      <div className="absolute inset-0 midnight/80 backdrop-blur-sm" onClick={onClose} />
       
       <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
         <button 
@@ -76,11 +76,11 @@ export default function InquiryModal({ isOpen, onClose }: InquiryModalProps) {
           <>
             <div className="p-6 lg:p-8 border-b border-gray-100">
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 bg-gold/10 rounded-lg flex items-center justify-center">
-                  <span className="text-gold font-bold">IG</span>
+                <div className="w-10 h-10 bg-electric/10 rounded-lg flex items-center justify-center">
+                  <span className="text-electric font-bold">IG</span>
                 </div>
                 <div>
-                  <h3 className="font-serif font-bold text-navy text-lg">Inquire Now</h3>
+                  <h3 className="font-serif font-bold text-ice text-lg">Inquire Now</h3>
                   <p className="text-gray-500 text-sm">Get started in 3 simple steps</p>
                 </div>
               </div>
@@ -89,10 +89,10 @@ export default function InquiryModal({ isOpen, onClose }: InquiryModalProps) {
                 {[1, 2, 3].map((s) => (
                   <div key={s} className="flex-1">
                     <div className={`h-1.5 rounded-full transition-colors ${
-                      step >= s ? 'bg-gold' : 'bg-gray-200'
+                      step >= s ? 'bg-electric' : 'bg-gray-200'
                     }`} />
                     <p className={`text-xs mt-1 ${
-                      step >= s ? 'text-gold' : 'text-gray-400'
+                      step >= s ? 'text-electric' : 'text-gray-400'
                     }`}>
                       {s === 1 ? 'Contact' : s === 2 ? 'Service' : 'Details'}
                     </p>
@@ -140,7 +140,7 @@ export default function InquiryModal({ isOpen, onClose }: InquiryModalProps) {
                   <button
                     type="button"
                     onClick={() => setStep(2)}
-                    className="w-full bg-gold text-navy py-3 rounded-lg font-semibold hover:bg-gold-light transition-colors mt-4"
+                    className="w-full bg-electric text-ice py-3 rounded-lg font-semibold hover:bg-electric-light transition-colors mt-4"
                   >
                     Continue
                   </button>
@@ -186,7 +186,7 @@ export default function InquiryModal({ isOpen, onClose }: InquiryModalProps) {
                     <button
                       type="button"
                       onClick={() => setStep(3)}
-                      className="flex-1 bg-gold text-navy py-3 rounded-lg font-semibold hover:bg-gold-light transition-colors"
+                      className="flex-1 bg-electric text-ice py-3 rounded-lg font-semibold hover:bg-electric-light transition-colors"
                     >
                       Continue
                     </button>
@@ -209,9 +209,9 @@ export default function InquiryModal({ isOpen, onClose }: InquiryModalProps) {
                   <div className="bg-gray-50 rounded-lg p-4">
                     <p className="text-sm text-gray-600 mb-2">Summary</p>
                     <div className="space-y-1 text-sm">
-                      <p><span className="text-gray-500">Name:</span> <span className="font-medium text-navy">{formData.name}</span></p>
-                      <p><span className="text-gray-500">Service:</span> <span className="font-medium text-navy">{formData.service || 'Not selected'}</span></p>
-                      <p><span className="text-gray-500">Amount:</span> <span className="font-medium text-navy">₦{formData.amount || 'Not specified'}</span></p>
+                      <p><span className="text-gray-500">Name:</span> <span className="font-medium text-ice">{formData.name}</span></p>
+                      <p><span className="text-gray-500">Service:</span> <span className="font-medium text-ice">{formData.service || 'Not selected'}</span></p>
+                      <p><span className="text-gray-500">Amount:</span> <span className="font-medium text-ice">₦{formData.amount || 'Not specified'}</span></p>
                     </div>
                   </div>
                   <div className="flex gap-3 mt-4">
@@ -225,7 +225,7 @@ export default function InquiryModal({ isOpen, onClose }: InquiryModalProps) {
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="flex-1 bg-gold text-navy py-3 rounded-lg font-semibold hover:bg-gold-light transition-colors disabled:opacity-70 flex items-center justify-center gap-2"
+                      className="flex-1 bg-electric text-ice py-3 rounded-lg font-semibold hover:bg-electric-light transition-colors disabled:opacity-70 flex items-center justify-center gap-2"
                     >
                       {isSubmitting ? (
                         <>
@@ -251,13 +251,13 @@ export default function InquiryModal({ isOpen, onClose }: InquiryModalProps) {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
             </div>
-            <h3 className="font-serif text-2xl font-bold text-navy mb-2">Inquiry Received!</h3>
+            <h3 className="font-serif text-2xl font-bold text-ice mb-2">Inquiry Received!</h3>
             <p className="text-gray-600 mb-6">
               Thank you for your interest in Irvin Global. Our team will contact you within 24 hours.
             </p>
             <button
               onClick={onClose}
-              className="bg-gold text-navy px-8 py-3 rounded-lg font-semibold hover:bg-gold-light transition-colors"
+              className="bg-electric text-ice px-8 py-3 rounded-lg font-semibold hover:bg-electric-light transition-colors"
             >
               Close
             </button>
