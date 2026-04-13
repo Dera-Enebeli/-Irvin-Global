@@ -3,8 +3,11 @@
 @tailwind utilities;
 
 :root {
-  --navy: #002147;
-  --gold: #C5A059;
+  --midnight: #0B121E;
+  --charcoal: #1A222F;
+  --electric: #00AEEF;
+  --ice: #FFFFFF;
+  --deepNavy: #1E293B;
 }
 
 html {
@@ -13,10 +16,25 @@ html {
 
 body {
   font-family: var(--font-inter), system-ui, sans-serif;
+  background-color: #0B121E;
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
+}
+
+.logo-glow {
+  filter: drop-shadow(0 0 20px rgba(0, 174, 239, 0.2));
+}
+
+.btn-gradient {
+  background: linear-gradient(90deg, #00AEEF, #00D4FF);
+}
+
+.card-glass {
+  background: rgba(30, 41, 59, 0.95);
+  border: 1px solid #1E293B;
+  backdrop-filter: blur(10px);
 }

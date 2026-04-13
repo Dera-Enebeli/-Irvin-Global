@@ -84,7 +84,7 @@ function TeamCard({ member, index }: { member: typeof teamMembers[0]; index: num
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <div className="relative overflow-hidden rounded-2xl bg-white shadow-lg group-hover:shadow-2xl transition-shadow duration-300">
+      <div className="relative overflow-hidden rounded-2xl card-glass shadow-lg group-hover:shadow-2xl transition-shadow duration-300">
         <div className="aspect-[4/5] relative overflow-hidden">
           <img
             src={member.image}
@@ -92,17 +92,17 @@ function TeamCard({ member, index }: { member: typeof teamMembers[0]; index: num
             className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-110"
           />
           
-          <div className={`absolute inset-0 bg-gradient-to-t from-navy via-navy/60 to-transparent transition-opacity duration-500 ${isHovered ? 'opacity-100' : 'opacity-0'}`} />
+          <div className={`absolute inset-0 bg-gradient-to-t from-midnight via-midnight/80 to-transparent transition-opacity duration-500 ${isHovered ? 'opacity-100' : 'opacity-0'}`} />
           
           <div className={`absolute inset-0 p-6 flex flex-col justify-end transition-all duration-500 ${isHovered ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-            <h3 className="font-serif text-lg font-bold text-white mb-1">{member.name}</h3>
-            <p className="text-gold text-sm font-medium mb-3">{member.role}</p>
-            <p className="text-white/80 text-sm leading-relaxed line-clamp-4">{member.bio}</p>
+            <h3 className="font-sans text-lg font-bold text-ice mb-1">{member.name}</h3>
+            <p className="text-electric text-sm font-medium mb-3">{member.role}</p>
+            <p className="text-ice/80 text-sm leading-relaxed line-clamp-4">{member.bio}</p>
           </div>
           
-          <div className={`absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-navy to-transparent transition-all duration-500 ${isHovered ? 'opacity-0' : 'opacity-100'}`}>
-            <h3 className="font-serif text-lg font-bold text-white mb-1">{member.name}</h3>
-            <p className="text-gold text-sm font-medium">{member.role}</p>
+          <div className={`absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-midnight to-transparent transition-all duration-500 ${isHovered ? 'opacity-0' : 'opacity-100'}`}>
+            <h3 className="font-sans text-lg font-bold text-ice mb-1">{member.name}</h3>
+            <p className="text-electric text-sm font-medium">{member.role}</p>
           </div>
         </div>
       </div>
@@ -133,14 +133,14 @@ export default function ManagementTeam() {
   }, [])
 
   return (
-    <section id="about" className="py-20 lg:py-32 bg-navy" ref={ref}>
+    <section id="about" className="py-20 lg:py-32 bg-charcoal" ref={ref}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className={`text-center max-w-3xl mx-auto mb-16 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-          <span className="text-gold font-semibold text-sm uppercase tracking-wider mb-4 block">Leadership</span>
-          <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
+          <span className="text-electric font-semibold text-sm uppercase tracking-wider mb-4 block">Leadership</span>
+          <h2 className="font-sans text-3xl sm:text-4xl lg:text-5xl font-bold text-ice mb-6">
             Meet the Management Team
           </h2>
-          <p className="text-white/70 text-lg">
+          <p className="text-ice/70 text-lg">
             Our Experts are unique set of individuals who work tirelessly to bring smiles to your face
           </p>
         </div>

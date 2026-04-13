@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Logo from './Logo'
 
 const quickLinks = [
   { label: 'Home', href: '#hero' },
@@ -53,25 +54,18 @@ export default function Footer() {
   }
 
   return (
-    <footer id="contact" className="bg-navy-900 text-white">
+    <footer id="contact" className="bg-midnight text-ice">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           <div className="lg:col-span-1">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-14 h-14 bg-white rounded-xl flex items-center justify-center p-2">
-                <svg viewBox="0 0 100 100" className="w-full h-full">
-                  <rect x="10" y="30" width="80" height="40" fill="#002147" rx="4" />
-                  <rect x="20" y="40" width="25" height="20" fill="#C5A059" rx="2" />
-                  <text x="50" y="58" textAnchor="middle" fill="#002147" fontSize="14" fontWeight="bold">IRVIN</text>
-                  <rect x="10" y="75" width="80" height="5" fill="#C5A059" rx="2" />
-                </svg>
-              </div>
-              <div>
-                <span className="font-serif font-bold text-xl">Irvin Global</span>
-                <span className="block text-gold text-xs font-medium">& Investment Group</span>
+            <div className="flex items-center gap-3 mb-4 sm:mb-6">
+              <Logo className="w-20 sm:w-20 h-auto logo-glow" />
+              <div className="flex-1 min-w-0">
+                <span className="font-sans font-bold text-base sm:text-lg block truncate">Irvin Global</span>
+                <span className="block text-electric text-[10px] sm:text-xs font-medium">& Investment Group</span>
               </div>
             </div>
-            <p className="text-white/60 text-sm leading-relaxed mb-6">
+            <p className="text-ice/60 text-sm leading-relaxed mb-6">
               Irvin Global and Investment Group is a Financial House established in 2016 with the aim of rendering financial consultancy services and consumer credit to the populace with immediate urgent needs.
             </p>
             <div className="flex gap-3">
@@ -79,7 +73,7 @@ export default function Footer() {
                 <a
                   key={social}
                   href="#"
-                  className="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center hover:bg-gold hover:text-navy transition-all"
+                  className="w-10 h-10 bg-deepNavy rounded-lg flex items-center justify-center hover:bg-electric hover:text-midnight transition-all"
                   aria-label={social}
                 >
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -94,13 +88,13 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="font-semibold text-lg mb-6 text-gold">Quick Links</h4>
+            <h4 className="font-semibold text-lg mb-6 text-electric">Quick Links</h4>
             <ul className="space-y-3">
               {quickLinks.map((link) => (
                 <li key={link.label}>
                   <button
                     onClick={() => scrollToSection(link.href)}
-                    className="text-white/60 hover:text-gold transition-colors text-sm hover:translate-x-1"
+                    className="text-ice/60 hover:text-electric transition-colors text-sm hover:translate-x-1"
                   >
                     {link.label}
                   </button>
@@ -110,13 +104,13 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="font-semibold text-lg mb-6 text-gold">Our Services</h4>
+            <h4 className="font-semibold text-lg mb-6 text-electric">Our Services</h4>
             <ul className="space-y-3">
               {services.map((link) => (
                 <li key={link.label}>
                   <button
                     onClick={() => scrollToSection(link.href)}
-                    className="text-white/60 hover:text-gold transition-colors text-sm"
+                    className="text-ice/60 hover:text-electric transition-colors text-sm"
                   >
                     {link.label}
                   </button>
@@ -126,13 +120,13 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="font-semibold text-lg mb-6 text-gold">Careers</h4>
+            <h4 className="font-semibold text-lg mb-6 text-electric">Careers</h4>
             <ul className="space-y-3 mb-8">
               {careers.map((link) => (
                 <li key={link.label}>
                   <button
                     onClick={() => scrollToSection(link.href)}
-                    className="text-white/60 hover:text-gold transition-colors text-sm"
+                    className="text-ice/60 hover:text-electric transition-colors text-sm"
                   >
                     {link.label}
                   </button>
@@ -140,24 +134,24 @@ export default function Footer() {
               ))}
             </ul>
 
-            <div className="border-t border-white/10 pt-6">
-              <h4 className="font-semibold text-sm mb-4 text-gold">Newsletter</h4>
-              <p className="text-white/60 text-xs mb-4">Subscribe to our Newsletter.</p>
+            <div className="border-t border-deepNavy pt-6 bg-deepNavy p-4 rounded-xl -mx-2">
+              <h4 className="font-semibold text-sm mb-4 text-electric">Newsletter</h4>
+              <p className="text-ice/60 text-xs mb-4">Subscribe to our Newsletter.</p>
               <form onSubmit={handleSubscribe} className="space-y-3">
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Enter your email"
-                  className="w-full px-4 py-3 bg-white/10 rounded-lg text-white placeholder-white/40 text-sm focus:outline-none focus:ring-2 focus:ring-gold"
+                  className="w-full px-4 py-3 bg-midnight rounded-lg text-ice placeholder-white/40 text-sm focus:outline-none focus:ring-2 focus:ring-electric"
                   required
                 />
                 <button
                   type="submit"
                   className={`w-full py-3 rounded-lg font-semibold text-sm transition-all ${
                     subscribed
-                      ? 'bg-green-500 text-white'
-                      : 'bg-gold text-navy hover:bg-gold-light'
+                      ? 'bg-green-500 text-ice'
+                      : 'bg-electric text-midnight hover:bg-gradient-to-r hover:from-electric hover:to-cyan-400 shadow-lg shadow-electric/20'
                   }`}
                 >
                   {subscribed ? 'Subscribed!' : 'Subscribe'}
@@ -168,15 +162,15 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="border-t border-white/10">
+      <div className="border-t border-deepNavy">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="text-white/40 text-sm">
+            <p className="text-ice/40 text-sm">
               © {currentYear} Irvin Global. All Rights Reserved. Designed and Developed by McOlay Concepts International Limited
             </p>
             <div className="flex gap-6">
               {['Privacy Policy', 'Terms of Service'].map((link) => (
-                <a key={link} href="#" className="text-white/40 hover:text-gold transition-colors text-sm">
+                <a key={link} href="#" className="text-ice/40 hover:text-electric transition-colors text-sm">
                   {link}
                 </a>
               ))}

@@ -9,20 +9,11 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        navy: {
-          DEFAULT: '#002147',
-          800: '#001a3a',
-          900: '#00122b',
-        },
-        gold: {
-          DEFAULT: '#C5A059',
-          light: '#d4b36a',
-          dark: '#b08d4a',
-        },
-      },
-      fontFamily: {
-        serif: ['var(--font-playfair)', 'Georgia', 'serif'],
-        sans: ['var(--font-inter)', 'system-ui', 'sans-serif'],
+        midnight: '#0B121E',
+        charcoal: '#1A222F',
+        electric: '#00AEEF',
+        ice: '#FFFFFF',
+        deepNavy: '#1E293B',
       },
     },
   },
