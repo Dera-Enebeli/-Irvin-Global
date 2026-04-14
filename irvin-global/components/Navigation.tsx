@@ -18,10 +18,25 @@ export default function Navigation({ onInquireClick }: { onInquireClick: () => v
   const [scrolled, setScrolled] = useState(false)
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null)
   const menuRef = useRef<HTMLDivElement>(null)
+  const topBarRef = useRef<HTMLDivElement>(null)
+  const navRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 100)
-    window.addEventListener('scroll', handleScroll)
+    if (typeof window === 'undefined') return
+
+    let ticking = false
+
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setScrolled(window.scrollY > 50)
+          ticking = false
+        })
+        ticking = true
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
@@ -57,7 +72,12 @@ export default function Navigation({ onInquireClick }: { onInquireClick: () => v
 
   return (
     <div className="fixed top-0 left-0 right-0 z-50">
-      <div className={`bg-midnight text-ice/80 transition-all duration-300 ${scrolled ? 'max-h-0 opacity-0' : 'max-h-20 opacity-100'}`}>
+      <div 
+        ref={topBarRef}
+        className={`bg-midnight text-ice/80 transition-all duration-300 ${
+          scrolled ? 'max-h-0 opacity-0 overflow-hidden' : 'max-h-20 opacity-100'
+        }`}
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row items-center justify-between py-2 text-xs sm:text-sm gap-1 sm:gap-0">
             <div className="flex items-center gap-3 sm:gap-6 w-full sm:w-auto justify-center">
@@ -94,7 +114,12 @@ export default function Navigation({ onInquireClick }: { onInquireClick: () => v
         </div>
       </div>
 
-      <nav ref={menuRef} className={`bg-midnight transition-all duration-300 ${scrolled ? 'shadow-2xl' : ''}`}>
+      <nav 
+        ref={navRef}
+        className={`bg-midnight transition-all duration-300 ${
+          scrolled ? 'backdrop-blur-xl bg-midnight/95 shadow-2xl' : ''
+        }`}
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-11 lg:h-14 pb-1">
             <div className="flex items-center gap-1.5 cursor-pointer" onClick={() => scrollToSection('#hero')}>

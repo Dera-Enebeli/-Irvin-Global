@@ -1,6 +1,10 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+
+gsap.registerPlugin(ScrollTrigger)
 
 const pressLogos = [
   {
@@ -64,34 +68,161 @@ const coreServices = [
 ]
 
 export default function NewsMedia() {
-  const [isVisible, setIsVisible] = useState(false)
-  const ref = useRef<HTMLDivElement>(null)
+  const sectionRef = useRef<HTMLDivElement>(null)
+  const newsTitleRef = useRef<HTMLHeadingElement>(null)
+  const pressGridRef = useRef<HTMLDivElement>(null)
+  const servicesTitleRef = useRef<HTMLHeadingElement>(null)
+  const servicesGridRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true)
-          observer.disconnect()
+    if (typeof window === 'undefined') return
+
+    const ctx = gsap.context(() => {
+      gsap.fromTo(newsTitleRef.current,
+        { opacity: 0, y: 50 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: newsTitleRef.current,
+            start: 'top 80%',
+            toggleActions: 'play none none reverse',
+          },
         }
-      },
-      { threshold: 0.1 }
-    )
+      )
 
-    if (ref.current) {
-      observer.observe(ref.current)
-    }
+      const pressItems = pressGridRef.current?.querySelectorAll('a') || []
+      gsap.fromTo(pressItems,
+        { opacity: 0, y: 30, scale: 0.9 },
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 0.6,
+          stagger: 0.1,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: pressGridRef.current,
+            start: 'top 85%',
+            toggleActions: 'play none none reverse',
+          },
+        }
+      )
 
-    return () => observer.disconnect()
+      gsap.fromTo(servicesTitleRef.current,
+        { opacity: 0, y: 50 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: servicesTitleRef.current,
+            start: 'top 80%',
+            toggleActions: 'play none none reverse',
+          },
+        }
+      )
+
+      const serviceCards = servicesGridRef.current?.querySelectorAll('div') || []
+      serviceCards.forEach((card, i) => {
+        if (card.classList.contains('group')) {
+          gsap.fromTo(card,
+            { 
+              opacity: 0, 
+              y: 60, 
+              rotateY: 10,
+            },
+            {
+              opacity: 1,
+              y: 0,
+              rotateY: 0,
+              duration: 0.8,
+              ease: 'power3.out',
+              scrollTrigger: {
+                trigger: card,
+                start: 'top 85%',
+                toggleActions: 'play none none reverse',
+              },
+              delay: i * 0.15,
+            }
+          )
+        }
+      })
+
+      pressItems.forEach((item) => {
+        const img = item.querySelector('img')
+        if (img) {
+          gsap.fromTo(img,
+            { scale: 1.1 },
+            {
+              scale: 1,
+              duration: 1.2,
+              ease: 'power2.out',
+              scrollTrigger: {
+                trigger: item,
+                start: 'top 85%',
+                toggleActions: 'play none none reverse',
+              },
+            }
+          )
+        }
+      })
+    }, sectionRef)
+
+    return () => ctx.revert()
   }, [])
 
+  const handlePressHover = (e: React.MouseEvent<HTMLAnchorElement>, isEnter: boolean) => {
+    const img = e.currentTarget.querySelector('img')
+    if (img) {
+      gsap.to(img, {
+        scale: isEnter ? 1.1 : 1,
+        opacity: isEnter ? 1 : 0.5,
+        duration: 0.3,
+        ease: 'power2.out',
+      })
+    }
+    gsap.to(e.currentTarget, {
+      y: isEnter ? -5 : 0,
+      boxShadow: isEnter ? '0 20px 40px rgba(0, 85, 255, 0.2)' : 'none',
+      duration: 0.3,
+    })
+  }
+
+  const handleServiceHover = (e: React.MouseEvent<HTMLDivElement>, isEnter: boolean) => {
+    const icon = e.currentTarget.querySelector('.service-icon')
+    const title = e.currentTarget.querySelector('h3')
+    
+    gsap.to(icon, {
+      scale: isEnter ? 1.1 : 1,
+      rotate: isEnter ? 10 : 0,
+      duration: 0.3,
+      ease: 'back.out(1.7)',
+    })
+    
+    gsap.to(title, {
+      y: isEnter ? -3 : 0,
+      duration: 0.3,
+    })
+    
+    gsap.to(e.currentTarget, {
+      y: isEnter ? -8 : 0,
+      scale: isEnter ? 1.02 : 1,
+      duration: 0.3,
+      ease: 'power2.out',
+    })
+  }
+
   return (
-    <div ref={ref}>
-      <section id="news" className="py-20 lg:py-28 bg-midnight">
+    <div ref={sectionRef}>
+      <section id="news" className="py-20 lg:py-28 bg-midnight overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <span className="text-blue-500 font-semibold text-sm uppercase tracking-wider mb-3 block">In The News</span>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
+            <h2 ref={newsTitleRef} className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
               Irving Global Group in the News
             </h2>
             <p className="text-white/60 text-lg">
@@ -99,23 +230,26 @@ export default function NewsMedia() {
             </p>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-            {pressLogos.map((press, index) => (
+          <div ref={pressGridRef} className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+            {pressLogos.map((press) => (
               <a
                 key={press.name}
                 href={press.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group rounded-xl p-6 flex items-center justify-center transition-all duration-300 hover:shadow-xl"
+                className="group rounded-xl p-6 flex items-center justify-center transition-all duration-300"
                 style={{ 
                   background: 'rgba(255,255,255,0.03)',
-                  border: '1px solid rgba(255,255,255,0.08)'
+                  border: '1px solid rgba(255,255,255,0.08)',
                 }}
+                onMouseEnter={(e) => handlePressHover(e, true)}
+                onMouseLeave={(e) => handlePressHover(e, false)}
               >
                 <img
                   src={press.logo}
                   alt={press.name}
-                  className="max-h-12 w-auto object-contain opacity-50 group-hover:opacity-100 transition-all duration-300"
+                  className="max-h-12 w-auto object-contain"
+                  style={{ opacity: 0.5 }}
                 />
               </a>
             ))}
@@ -123,11 +257,11 @@ export default function NewsMedia() {
         </div>
       </section>
 
-      <section className="py-20 lg:py-28 bg-charcoal">
+      <section className="py-20 lg:py-28 bg-charcoal overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <span className="text-blue-500 font-semibold text-sm uppercase tracking-wider mb-3 block">Our Core Services</span>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
+            <h2 ref={servicesTitleRef} className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
               Beyond Loans
             </h2>
             <p className="text-white/60 text-lg">
@@ -135,25 +269,29 @@ export default function NewsMedia() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6">
+          <div ref={servicesGridRef} className="grid md:grid-cols-3 gap-6">
             {coreServices.map((service, index) => (
               <div
                 key={service.title}
-                className="group relative overflow-hidden rounded-3xl p-8 transition-all duration-500 hover:-translate-y-2"
+                className="group relative overflow-hidden rounded-3xl p-8 cursor-pointer"
                 style={{ 
                   background: 'linear-gradient(135deg, rgba(26, 34, 47, 0.9) 0%, rgba(11, 18, 30, 0.95) 100%)',
-                  border: '1px solid rgba(255, 255, 255, 0.08)'
+                  border: '1px solid rgba(255, 255, 255, 0.08)',
+                  transformStyle: 'preserve-3d',
+                  perspective: '1000px',
                 }}
+                onMouseEnter={(e) => handleServiceHover(e, true)}
+                onMouseLeave={(e) => handleServiceHover(e, false)}
               >
                 <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
                   style={{ background: `radial-gradient(circle at 50% 0%, ${service.color}22 0%, transparent 60%)` }} />
                 
                 <div className="relative z-10">
-                  <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-6 transition-all duration-300 group-hover:scale-110"
+                  <div className="service-icon w-16 h-16 rounded-2xl flex items-center justify-center mb-6 transition-all duration-300"
                     style={{ background: `${service.color}22`, color: service.color }}>
                     {service.icon}
                   </div>
-                  <h3 className="text-xl font-bold text-white mb-3 group-hover:transition-colors"
+                  <h3 className="text-xl font-bold text-white mb-3"
                     style={{ color: service.color }}>
                     {service.title}
                   </h3>

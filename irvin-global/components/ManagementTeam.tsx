@@ -1,6 +1,10 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+
+gsap.registerPlugin(ScrollTrigger)
 
 const teamMembers = [
   {
@@ -54,98 +58,259 @@ const teamMembers = [
 ]
 
 function TeamCard({ member, index }: { member: typeof teamMembers[0]; index: number }) {
-  const [isVisible, setIsVisible] = useState(false)
-  const [isHovered, setIsHovered] = useState(false)
-  const ref = useRef<HTMLDivElement>(null)
+  const cardRef = useRef<HTMLDivElement>(null)
+  const imageRef = useRef<HTMLImageElement>(null)
+  const overlayRef = useRef<HTMLDivElement>(null)
+  const contentRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true)
-          observer.disconnect()
+    if (typeof window === 'undefined') return
+
+    const ctx = gsap.context(() => {
+      gsap.fromTo(cardRef.current,
+        { 
+          opacity: 0, 
+          y: 60, 
+          rotateY: 15,
+          scale: 0.9,
+        },
+        {
+          opacity: 1,
+          y: 0,
+          rotateY: 0,
+          scale: 1,
+          duration: 0.8,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: cardRef.current,
+            start: 'top 85%',
+            toggleActions: 'play none none reverse',
+          },
+          delay: (index % 4) * 0.1,
         }
-      },
-      { threshold: 0.2 }
-    )
+      )
 
-    if (ref.current) {
-      observer.observe(ref.current)
-    }
+      const maskDiv = cardRef.current?.querySelector('.mask-div')
+      if (maskDiv) {
+        gsap.fromTo(maskDiv as Element,
+          { scaleX: 0 },
+          {
+            scaleX: 1,
+            duration: 0.8,
+            ease: 'power3.inOut',
+            scrollTrigger: {
+              trigger: cardRef.current,
+              start: 'top 85%',
+              toggleActions: 'play none none reverse',
+            },
+            delay: (index % 4) * 0.1,
+          }
+        )
+      }
 
-    return () => observer.disconnect()
-  }, [])
+      gsap.fromTo(imageRef.current,
+        { scale: 1.2 },
+        {
+          scale: 1,
+          duration: 1.2,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: cardRef.current,
+            start: 'top 85%',
+            toggleActions: 'play none none reverse',
+          },
+          delay: (index % 4) * 0.1,
+        }
+      )
+
+      gsap.to(cardRef.current, {
+        y: -8,
+        duration: 0.3,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: cardRef.current,
+          start: 'top bottom',
+          end: 'bottom top',
+          scrub: 1,
+        },
+      })
+    }, cardRef)
+
+    return () => ctx.revert()
+  }, [index])
+
+  const handleMouseEnter = () => {
+    gsap.to(imageRef.current, {
+      scale: 1.1,
+      duration: 0.5,
+      ease: 'power2.out',
+    })
+    gsap.to(overlayRef.current, {
+      opacity: 1,
+      duration: 0.3,
+    })
+    gsap.to(contentRef.current, {
+      y: 0,
+      opacity: 1,
+      duration: 0.3,
+      ease: 'power2.out',
+    })
+    gsap.to(cardRef.current, {
+      scale: 1.02,
+      boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
+      duration: 0.3,
+    })
+  }
+
+  const handleMouseLeave = () => {
+    gsap.to(imageRef.current, {
+      scale: 1,
+      duration: 0.5,
+      ease: 'power2.out',
+    })
+    gsap.to(overlayRef.current, {
+      opacity: 0,
+      duration: 0.3,
+    })
+    gsap.to(contentRef.current, {
+      y: 20,
+      opacity: 0,
+      duration: 0.3,
+    })
+    gsap.to(cardRef.current, {
+      scale: 1,
+      boxShadow: 'none',
+      duration: 0.3,
+    })
+  }
 
   return (
     <div
-      ref={ref}
-      className={`group transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
-      style={{ transitionDelay: `${index * 100}ms` }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      ref={cardRef}
+      className="group relative overflow-hidden rounded-2xl"
+      style={{ 
+        transformStyle: 'preserve-3d',
+        perspective: '1000px',
+      }}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
-      <div className="relative overflow-hidden rounded-2xl card-glass shadow-lg group-hover:shadow-2xl transition-shadow duration-300">
-        <div className="aspect-[4/5] relative overflow-hidden">
-          <img
-            src={member.image}
-            alt={member.name}
-            className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-110"
-          />
-          
-          <div className={`absolute inset-0 bg-gradient-to-t from-midnight via-midnight/80 to-transparent transition-opacity duration-500 ${isHovered ? 'opacity-100' : 'opacity-0'}`} />
-          
-          <div className={`absolute inset-0 p-6 flex flex-col justify-end transition-all duration-500 ${isHovered ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-            <h3 className="font-sans text-lg font-bold text-ice mb-1">{member.name}</h3>
-            <p className="text-electric text-sm font-medium mb-3">{member.role}</p>
-            <p className="text-ice/80 text-sm leading-relaxed line-clamp-4">{member.bio}</p>
-          </div>
-          
-          <div className={`absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-midnight to-transparent transition-all duration-500 ${isHovered ? 'opacity-0' : 'opacity-100'}`}>
-            <h3 className="font-sans text-lg font-bold text-ice mb-1">{member.name}</h3>
-            <p className="text-electric text-sm font-medium">{member.role}</p>
-          </div>
+      <div className="aspect-[4/5] relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-t from-midnight via-midnight/80 to-transparent origin-left z-10 mask-div" />
+        
+        <img
+          ref={imageRef}
+          src={member.image}
+          alt={member.name}
+          className="w-full h-full object-cover object-top"
+        />
+        
+        <div ref={overlayRef} className="absolute inset-0 bg-gradient-to-t from-midnight via-midnight/80 to-transparent opacity-0 z-20" />
+        
+        <div 
+          ref={contentRef}
+          className="absolute inset-0 p-6 flex flex-col justify-end opacity-0 z-30"
+          style={{ transform: 'translateY(20px)' }}
+        >
+          <h3 className="font-sans text-lg font-bold text-ice mb-1">{member.name}</h3>
+          <p className="text-electric text-sm font-medium mb-3">{member.role}</p>
+          <p className="text-ice/80 text-sm leading-relaxed line-clamp-4">{member.bio}</p>
+        </div>
+        
+        <div className="absolute inset-0 p-6 flex flex-col justify-end z-20 group-hover:opacity-0 transition-opacity duration-300">
+          <h3 className="font-sans text-lg font-bold text-ice mb-1">{member.name}</h3>
+          <p className="text-electric text-sm font-medium">{member.role}</p>
         </div>
       </div>
+
+      <div className="absolute bottom-0 left-0 right-0 h-1 origin-left z-30"
+        style={{ 
+          background: 'linear-gradient(90deg, #0055FF, transparent)',
+          transform: 'scaleX(0)',
+          transformOrigin: 'left',
+        }}
+      />
     </div>
   )
 }
 
 export default function ManagementTeam() {
-  const [isVisible, setIsVisible] = useState(false)
-  const ref = useRef<HTMLDivElement>(null)
+  const sectionRef = useRef<HTMLElement>(null)
+  const titleRef = useRef<HTMLDivElement>(null)
+  const subtitleRef = useRef<HTMLParagraphElement>(null)
+  const gridRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true)
-          observer.disconnect()
+    if (typeof window === 'undefined') return
+
+    const ctx = gsap.context(() => {
+      gsap.fromTo(titleRef.current,
+        { opacity: 0, y: 50, rotateX: -30 },
+        {
+          opacity: 1,
+          y: 0,
+          rotateX: 0,
+          duration: 1,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: titleRef.current,
+            start: 'top 80%',
+            toggleActions: 'play none none reverse',
+          },
         }
-      },
-      { threshold: 0.1 }
-    )
+      )
 
-    if (ref.current) {
-      observer.observe(ref.current)
-    }
+      gsap.fromTo(subtitleRef.current,
+        { opacity: 0, y: 30 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: subtitleRef.current,
+            start: 'top 85%',
+            toggleActions: 'play none none reverse',
+          },
+          delay: 0.2,
+        }
+      )
 
-    return () => observer.disconnect()
+      const cards = gridRef.current?.children || []
+      gsap.fromTo(cards,
+        { opacity: 0, y: 40 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.6,
+          stagger: 0.1,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: gridRef.current,
+            start: 'top 80%',
+            toggleActions: 'play none none reverse',
+          },
+        }
+      )
+    }, sectionRef)
+
+    return () => ctx.revert()
   }, [])
 
   return (
-    <section id="about" className="py-20 lg:py-32 bg-charcoal" ref={ref}>
+    <section id="about" ref={sectionRef} className="py-20 lg:py-32 bg-charcoal">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className={`text-center max-w-3xl mx-auto mb-16 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+        <div ref={titleRef} className="text-center max-w-3xl mx-auto mb-16" style={{ perspective: '500px' }}>
           <span className="text-electric font-semibold text-sm uppercase tracking-wider mb-4 block">Leadership</span>
           <h2 className="font-sans text-3xl sm:text-4xl lg:text-5xl font-bold text-ice mb-6">
             Meet the Management Team
           </h2>
-          <p className="text-ice/70 text-lg">
+          <p ref={subtitleRef} className="text-ice/70 text-lg">
             Our Experts are unique set of individuals who work tirelessly to bring smiles to your face
           </p>
         </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+        <div ref={gridRef} className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
           {teamMembers.map((member, index) => (
             <TeamCard key={member.name} member={member} index={index} />
           ))}

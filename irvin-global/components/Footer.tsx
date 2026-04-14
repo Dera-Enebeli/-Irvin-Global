@@ -1,7 +1,11 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Logo from './Logo'
+
+gsap.registerPlugin(ScrollTrigger)
 
 const quickLinks = [
   { label: 'Home', href: '#hero' },
@@ -35,7 +39,118 @@ const careers = [
 export default function Footer() {
   const [email, setEmail] = useState('')
   const [subscribed, setSubscribed] = useState(false)
-  const currentYear = new Date().getFullYear()
+  const footerRef = useRef<HTMLElement>(null)
+  const col1Ref = useRef<HTMLDivElement>(null)
+  const col2Ref = useRef<HTMLUListElement>(null)
+  const col3Ref = useRef<HTMLUListElement>(null)
+  const col4Ref = useRef<HTMLDivElement>(null)
+  const bottomRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+
+    const ctx = gsap.context(() => {
+      gsap.fromTo(col1Ref.current,
+        { opacity: 0, y: 40 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: footerRef.current,
+            start: 'top 85%',
+            toggleActions: 'play none none reverse',
+          },
+        }
+      )
+
+      gsap.fromTo(col2Ref.current?.children || [],
+        { opacity: 0, x: -20 },
+        {
+          opacity: 1,
+          x: 0,
+          duration: 0.5,
+          stagger: 0.05,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: footerRef.current,
+            start: 'top 85%',
+            toggleActions: 'play none none reverse',
+          },
+          delay: 0.2,
+        }
+      )
+
+      gsap.fromTo(col3Ref.current?.children || [],
+        { opacity: 0, x: -20 },
+        {
+          opacity: 1,
+          x: 0,
+          duration: 0.5,
+          stagger: 0.05,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: footerRef.current,
+            start: 'top 85%',
+            toggleActions: 'play none none reverse',
+          },
+          delay: 0.3,
+        }
+      )
+
+      gsap.fromTo(col4Ref.current,
+        { opacity: 0, x: 40 },
+        {
+          opacity: 1,
+          x: 0,
+          duration: 0.8,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: footerRef.current,
+            start: 'top 85%',
+            toggleActions: 'play none none reverse',
+          },
+          delay: 0.4,
+        }
+      )
+
+      gsap.fromTo(bottomRef.current,
+        { opacity: 0, y: 20 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.6,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: bottomRef.current,
+            start: 'top 95%',
+            toggleActions: 'play none none reverse',
+          },
+          delay: 0.6,
+        }
+      )
+
+      const socials = col1Ref.current?.querySelectorAll('.social-btn') || []
+      gsap.fromTo(socials,
+        { opacity: 0, scale: 0 },
+        {
+          opacity: 1,
+          scale: 1,
+          stagger: 0.1,
+          ease: 'back.out(1.7)',
+          scrollTrigger: {
+            trigger: footerRef.current,
+            start: 'top 85%',
+            toggleActions: 'play none none reverse',
+          },
+          delay: 0.5,
+        }
+      )
+    }, footerRef)
+
+    return () => ctx.revert()
+  }, [])
 
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault()
@@ -53,11 +168,13 @@ export default function Footer() {
     }
   }
 
+  const currentYear = new Date().getFullYear()
+
   return (
-    <footer id="contact" className="bg-midnight text-ice">
+    <footer ref={footerRef} id="contact" className="bg-midnight text-ice">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
-          <div className="lg:col-span-1">
+          <div ref={col1Ref} className="lg:col-span-1">
             <div className="flex items-center gap-3 mb-4 sm:mb-6">
               <Logo className="w-20 sm:w-20 h-auto logo-glow" />
               <div className="flex-1 min-w-0">
@@ -73,7 +190,7 @@ export default function Footer() {
                 <a
                   key={social}
                   href="#"
-                  className="w-10 h-10 bg-deepNavy rounded-lg flex items-center justify-center hover:bg-electric hover:text-midnight transition-all"
+                  className="social-btn w-10 h-10 bg-deepNavy rounded-lg flex items-center justify-center hover:bg-electric hover:text-midnight transition-all"
                   aria-label={social}
                 >
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -89,7 +206,7 @@ export default function Footer() {
 
           <div>
             <h4 className="font-semibold text-lg mb-6 text-electric">Quick Links</h4>
-            <ul className="space-y-3">
+            <ul ref={col2Ref} className="space-y-3">
               {quickLinks.map((link) => (
                 <li key={link.label}>
                   <button
@@ -105,7 +222,7 @@ export default function Footer() {
 
           <div>
             <h4 className="font-semibold text-lg mb-6 text-electric">Our Services</h4>
-            <ul className="space-y-3">
+            <ul ref={col3Ref} className="space-y-3">
               {services.map((link) => (
                 <li key={link.label}>
                   <button
@@ -119,7 +236,7 @@ export default function Footer() {
             </ul>
           </div>
 
-          <div>
+          <div ref={col4Ref}>
             <h4 className="font-semibold text-lg mb-6 text-electric">Careers</h4>
             <ul className="space-y-3 mb-8">
               {careers.map((link) => (
@@ -134,7 +251,7 @@ export default function Footer() {
               ))}
             </ul>
 
-            <div className="border-t border-deepNavy pt-6 bg-deepNavy p-4 rounded-xl -mx-2">
+            <div className="border-t border-deepNavy pt-6 bg-deepNavy p-4 rounded-xl">
               <h4 className="font-semibold text-sm mb-4 text-electric">Newsletter</h4>
               <p className="text-ice/60 text-xs mb-4">Subscribe to our Newsletter.</p>
               <form onSubmit={handleSubscribe} className="space-y-3">
@@ -162,7 +279,7 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="border-t border-deepNavy">
+      <div ref={bottomRef} className="border-t border-deepNavy">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <p className="text-ice/40 text-sm">
